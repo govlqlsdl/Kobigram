@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+#wrap {
+    width:800px;
+    margin:0 auto;
+}
+
+.main-contents {
+    width:430px;
+}
+
+.login-box {
+    width:350px;
+}
+
+.big-font {
+    font-size:20px;
+}
+
+.img-icon {
+	font-size:23px;
+}
