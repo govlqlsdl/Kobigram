@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+	<section layout:fragment="contents" class="d-flex justify-content-center">
+		<div class="bg-white border rounded" style="width: 400px;">
+	
+		    <!-- 상단 바 -->
+		    <div class="d-flex justify-content-between align-items-center border-bottom px-3 py-2 text-dark">
+		    	<i class="bi bi-chevron-left"></i> 새 게시물 <i class="bi bi-three-dots"></i>
+		    </div>
+		
+		    <!-- 입력창 -->
+		    <div class="px-3 pt-3 pb-1">
+		    	<textarea id="contentsInput" class="form-control border text-dark" style="height: 280px;" placeholder="내용을 입력하세요."></textarea>
+		    </div>
+		
+		    <div class="list-group list-group-flush">
+	
+	  			<!-- 사진 추가 -->
+		  		<button type="button" id="imageInput" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-dark">
+		    
+			    	<div class="d-flex align-items-center">
+			      		<i class="bi bi-image"></i>
+			      		<span>사진 추가</span>
+			      
+			      		<!-- 썸네일: 약간 떨어뜨려서 자연스럽게 -->
+			      		<img id="thumbPreview" class="rounded d-none" style="margin-left: 16px; width: 30px; height: 30px; object-fit: cover;" alt="썸네일">
+			    	</div> <i class="bi bi-chevron-right"></i>
+		  		</button>
+	
+			  	<!-- 사람 태그 -->
+			  	<button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-dark">
+			    	<span><i class="bi bi-person-plus me-2"></i> 사람 태그</span>
+			    	<i class="bi bi-chevron-right"></i>
+			  	</button>
+			
+			  	<!-- 음악 추가 -->
+			  	<button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-dark">
+			    	<span><i class="bi bi-music-note me-2"></i> 음악 추가</span>
+			    	<i class="bi bi-chevron-right"></i>
+			  	</button>
+			
+			  	<!-- 위치 추가 -->
+			  	<button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-dark border-bottom-0">
+			    	<span><i class="bi bi-geo-alt me-2"></i> 위치 추가</span>
+			    	<i class="bi bi-chevron-right"></i>
+			  	</button>
+			
+			</div>
+		
+		    <!-- 공유 버튼 -->
+		    <div class="p-3">
+		    	<input type="file" id="fileInput" class="d-none">
+		      	<button id="uploadBtn" class="btn btn-dark w-100 rounded text-white">공유하기</button>
+		    </div>
+	
+		</div>
+	</section>
+	<script layout:fragment="script">
+			$(function() {
+				
+				$("#uploadBtn").on("click", function() {
+					let contents = $("#contentsInput").val();
+					
+					let file = $("#fileInput")[0].files[0];
+					
+					if(contents == "") {
+						alert("내용을 입력하세요");
+						return ;
+					}
+					
+					if(file == null) {
+						alert("이미지를 선택해주세요");
+						return ;
+					}
+					
+					let formData = new FormData();
+					formData.append("contents", contents);
+					formData.append("imageFile", file);
+					
+					$.ajax({
+						type:"post"
+						, url:"/post/create"
+						, data:formData
+						, enctype:"multipart/form-data"
+						, processData:false
+						, contentType:false
+						, success:function(response) {
+							if(response.result == "success") {
+								location.href = "/post/timeline-view";
+							} else {
+								alert("업로드 실패!");
+							}
+						}
+						, error:function() {
+							alert("업로드 에러!!");
+						}
+					});
+				});
+				
+				$("#imageInput").on("click", function() {
+					$("#fileInput").click();
+				});
+				
+				$("#fileInput").on("change", function () {
+					const file = this.files[0];
+					if (file) {
+					    const reader = new FileReader();
+					    reader.onload = function (e) {
+					      $("#thumbPreview").attr("src", e.target.result).removeClass("d-none");
+					    };
+					    reader.readAsDataURL(file);
+					  }
+					});
+			})
+		
+		</script>
+	
+</html>

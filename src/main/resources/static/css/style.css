@@ -20,3 +20,8 @@
 .img-icon {
 	font-size:23px;
 }
+
+.nav-link:hover {
+	background-color: #f8f9fa;
+  	font-weight: 500;
+}
