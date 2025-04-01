@@ -33,10 +33,13 @@ public class LikeService {
 		
 	}
 	
+	// 게시글 별로 좋아요 개수 얻어오기
 	public int getLikeCount(int postId) {
 		return likeRepository.countByPostId(postId);
 	}
 	
-	
+	public boolean isLikeByPostIdAndUserId(int postId, int userId) {
+		return likeRepository.existsByPostIdAndUserId(postId, userId);
+	}
 
 }

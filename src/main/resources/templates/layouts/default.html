@@ -17,14 +17,15 @@
 	    <th:block th:replace="~{fragments/header}"></th:block>
 	    
 	    <!-- 사이드바 + 컨텐츠 나란히 배치 -->
-	    <div class="d-flex">
-	     	<!-- 왼쪽 메뉴 -->
-	      	<th:block th:replace="~{fragments/leftmenu}"></th:block>
-	      
-	      	<!-- 오른쪽 메인 컨텐츠 -->
-	      	<th:block layout:fragment="contents"></th:block>
+	    <div id="contentWrap">
+		    <div class="d-flex">
+		     	<!-- 왼쪽 메뉴 -->
+		      	<th:block th:replace="~{fragments/leftmenu}"></th:block>
+		      
+		      	<!-- 오른쪽 메인 컨텐츠 -->
+		      	<th:block layout:fragment="contents"></th:block>
+		    </div>
 	    </div>
-	    
 	    <!-- 푸터 -->
 	    <th:block th:replace="~{fragments/footer}"></th:block>
     

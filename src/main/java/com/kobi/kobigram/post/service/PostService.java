@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kobi.kobigram.common.FileManager;
 import com.kobi.kobigram.like.service.LikeService;
+import com.kobi.kobigram.post.comment.dto.CommentView;
+import com.kobi.kobigram.post.comment.service.CommentService;
 import com.kobi.kobigram.post.domain.Post;
 import com.kobi.kobigram.post.dto.CardView;
 import com.kobi.kobigram.post.repository.PostRepository;
@@ -16,21 +18,20 @@ import com.kobi.kobigram.user.domain.User;
 import com.kobi.kobigram.user.service.UserService;
 
 import jakarta.persistence.PersistenceException;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor // final이 부여된 멤버 변수만 파라미터로 전달받아서 채워준다(@Autowired 를 자동으로 해주는것이 아님, 생성자를 만들어주는것)
 @Service
 public class PostService {
 	
+	// 원래는 @Autowired 를 통해서 객체를 얻어오고 그걸 생성자를 통해 하는것이 정석
 	private final PostRepository postRepository;
 	
 	private final UserService userService;
 	
 	private final LikeService likeService;
 	
-	public PostService(PostRepository postRepository, UserService userService, LikeService likeService) {
-		this.postRepository = postRepository;
-		this.userService = userService;
-		this.likeService = likeService;
-	}
+	private final CommentService commentService;
 	
 	public boolean addPost(int userId, String contents, MultipartFile imageFile) {
 		
@@ -52,7 +53,7 @@ public class PostService {
 		
 	}
 	
-	public List<CardView> getPostList() {
+	public List<CardView> getPostList(int userId) {
 		// 최신 업로드 기준으로 정렬
 		List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 		
@@ -63,6 +64,10 @@ public class PostService {
 			
 			int likeCount = likeService.getLikeCount(post.getId());
 			
+			boolean isLike = likeService.isLikeByPostIdAndUserId(post.getId(), userId);
+			
+			List<CommentView> commentList = commentService.getCommentList(post.getId());
+			
 			CardView cardView = CardView.builder()
 			.postId(post.getId())
 			.contents(post.getContents())
@@ -70,6 +75,8 @@ public class PostService {
 			.userId(post.getUserId())
 			.loginId(user.getLoginId())
 			.likeCount(likeCount)
+			.isLike(isLike)
+			.commentList(commentList)
 			.build();
 			
 			cardList.add(cardView);

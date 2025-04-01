@@ -26,8 +26,8 @@ public class Comment {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	private int userId;
 	private int postId;
+	private int userId;
 	private String contents;
 	
 	@CreationTimestamp

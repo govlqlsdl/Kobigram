@@ -1,5 +1,9 @@
 package com.kobi.kobigram.post.dto;
 
+import java.util.List;
+
+import com.kobi.kobigram.post.comment.dto.CommentView;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,7 +24,9 @@ public class CardView {
 	
 	private int likeCount;
 	
-	
-	
+	// 로그인한 사용자의 좋아요 여부 
+	private boolean isLike;
+
+	private List<CommentView> commentList;
 
 }

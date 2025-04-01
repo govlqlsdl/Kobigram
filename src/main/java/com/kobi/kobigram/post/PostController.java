@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.kobi.kobigram.post.dto.CardView;
 import com.kobi.kobigram.post.service.PostService;
 
+import jakarta.servlet.http.HttpSession;
+
 @RequestMapping("/post")
 @Controller
 public class PostController {
@@ -21,18 +23,22 @@ public class PostController {
 	}
 	
 	@GetMapping("/timeline-view")
-	public String timeline(Model model) {
+	public String timeline(
+			HttpSession session
+			,Model model) {
 		
-		List<CardView> cardList = postService.getPostList();
+		int userId = (Integer)session.getAttribute("userId");
+		
+		List<CardView> cardList = postService.getPostList(userId);
 		
 		model.addAttribute("cardList", cardList);
 		
 		return "post/timeline";
 	}
 	
-	 @GetMapping("/create-view")
-	    public String createPostView() {
-	        return "post/create";
-    }
+	@GetMapping("/create-view")
+	public String createView() {
+	    return "post/create";
+	}
 }
 
