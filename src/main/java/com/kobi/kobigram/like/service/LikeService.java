@@ -1,5 +1,7 @@
 package com.kobi.kobigram.like.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.kobi.kobigram.like.domain.Like;
@@ -33,6 +35,26 @@ public class LikeService {
 		
 	}
 	
+	public boolean deleteLike(int postId, int userId) {
+		Optional<Like> optionalLike = likeRepository.findByPostIdAndUserId(postId, userId);
+		
+		if(optionalLike.isPresent()) {
+			
+			Like like = optionalLike.get();
+			
+			try {
+				likeRepository.delete(like);
+			} catch(PersistenceException e) {
+				return false;
+			}
+			
+		}else {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	// 게시글 별로 좋아요 개수 얻어오기
 	public int getLikeCount(int postId) {
 		return likeRepository.countByPostId(postId);
@@ -41,5 +63,9 @@ public class LikeService {
 	public boolean isLikeByPostIdAndUserId(int postId, int userId) {
 		return likeRepository.existsByPostIdAndUserId(postId, userId);
 	}
-
+	
+	public void deleteLikeByPostId(int postId) {
+		likeRepository.deleteByPostId(postId);
+	}
+	
 }

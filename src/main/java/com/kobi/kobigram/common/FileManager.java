@@ -62,8 +62,28 @@ public class FileManager {
 		// /images/5_132900923/test.png
 		
 		return "/images" + directoryName + "/" + file.getOriginalFilename();
-		
-		
 	}
+	// 파일 삭제 기능
+		public static boolean removeFile(String imagePath) { // /images/1_1743421277973/swiss-alps-8216616_640.jpg
+			
+			if(imagePath == null) { // 사진이 없는 파일도 있으니
+				return false;
+			}
+			
+			String fullFilePath = FILE_UPLOAD_PATH + imagePath.replace("/images", "");
+			
+			Path path = Paths.get(fullFilePath);
+			// D:\\project\\upload\\kobigram/5_132900923
+			Path directoryPath = path.getParent();
+			
+			try {
+				Files.delete(path);
+				Files.delete(directoryPath);
+			} catch (IOException e) {
+				return false;
+			}
+			
+			return true;
+		}
 
 }
